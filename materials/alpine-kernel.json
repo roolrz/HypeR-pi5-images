@@ -1,0 +1,8 @@
+{
+  "SPDX-FileCopyrightText": "2026 roolrz",
+  "SPDX-License-Identifier": "Apache-2.0",
+  "release": "6.18.36-0-virt",
+  "origin": "linux-lts",
+  "commit": "ae93479746da09f12b44d15e551b33504fac9727",
+  "image_sha256": "1eccfface8f99a197bbed4265b0a20a8708976bec4d624879e18125fb000299a"
+}

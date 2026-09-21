@@ -1,0 +1,66 @@
+{
+  "SPDX-FileCopyrightText": "2026 roolrz",
+  "SPDX-License-Identifier": "Apache-2.0",
+  "io_manifest_sha256": "42f8f7f6abe3f442b323875c52508a9c2e6a978ac61dff13e470351a471c2def",
+  "source_revision": "cb81368bcb1301aa7499c4b4621ec9748536e2e9",
+  "build_run": "https://github.com/roolrz/HypeR-io-vm/actions/runs/35516979133",
+  "build_evidence": [
+    "AArch64 rpi5 kernel, appliance, and disk acceptance\tUNKNOWN STEP\t2026-09-20T14:36:13.7917762Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libc6-arm64-cross all 2.39-0ubuntu8cross1 [1197 kB]",
+    "AArch64 rpi5 kernel, appliance, and disk acceptance\tUNKNOWN STEP\t2026-09-20T14:36:34.7572052Z Get:109 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libc6-dev-arm64-cross all 2.39-0ubuntu8cross1 [1629 kB]"
+  ],
+  "glibc": "2.39-0ubuntu8",
+  "cross_toolchain_base": "68ubuntu5",
+  "files": [
+    {
+      "name": "glibc_2.39-0ubuntu8.dsc",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glibc/glibc_2.39-0ubuntu8.dsc",
+      "sha256": "af44b50b4aba75916f920337523d89698c465fafb720268bb87b2555000bea7a"
+    },
+    {
+      "name": "glibc_2.39.orig.tar.xz",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glibc/glibc_2.39.orig.tar.xz",
+      "sha256": "f77bd47cf8170c57365ae7bf86696c118adb3b120d3259c64c502d3dc1e2d926",
+      "bytes": 18520988
+    },
+    {
+      "name": "glibc_2.39.orig.tar.xz.asc",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glibc/glibc_2.39.orig.tar.xz.asc",
+      "sha256": "2cce427ef7933c17379f5514e4f0ccf8dffae5bf8c72f0f7e0bf8b8401f34be5",
+      "bytes": 833
+    },
+    {
+      "name": "glibc_2.39-0ubuntu8.debian.tar.xz",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glibc/glibc_2.39-0ubuntu8.debian.tar.xz",
+      "sha256": "24d8627f34850f05554158b085499d255c67af27be9762d6a911b168852c1dd2",
+      "bytes": 456640
+    },
+    {
+      "name": "cross-toolchain-base_68ubuntu5.dsc",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/c/cross-toolchain-base/cross-toolchain-base_68ubuntu5.dsc",
+      "sha256": "f58e282297625b3dd0f0e2af3f15aef5fae1096a15b2508210f61066e7c5aef4"
+    },
+    {
+      "name": "cross-toolchain-base_68ubuntu5.tar.xz",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/c/cross-toolchain-base/cross-toolchain-base_68ubuntu5.tar.xz",
+      "sha256": "4ddf068036ba9b93356a9102df531c8cfd02f739f2ec2a975c246ee1a5e9e00f",
+      "bytes": 45968
+    },
+    {
+      "name": "libc6-dev-arm64-cross_2.39-0ubuntu8cross1_all.deb",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/c/cross-toolchain-base/libc6-dev-arm64-cross_2.39-0ubuntu8cross1_all.deb",
+      "sha256": "04c6956de42669a53e620ad04a32475ea0bd4325808c227bf5ba52498f0d3f90"
+    },
+    {
+      "name": "GCC-COPYING3",
+      "url": "https://raw.githubusercontent.com/gcc-mirror/gcc/releases/gcc-13.3.0/COPYING3",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    {
+      "name": "GCC-COPYING.RUNTIME",
+      "url": "https://raw.githubusercontent.com/gcc-mirror/gcc/releases/gcc-13.3.0/COPYING.RUNTIME",
+      "sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74"
+    }
+  ],
+  "gcc_runtime": "GCC 13.3.0, GPL-3.0 with GCC Runtime Library Exception 3.1; see bundled texts",
+  "relink_instructions": "Use the service C sources and GCC link commands in io-vm-sources.tar.xz with a rebuilt compatible libc. The matching glibc upstream tarball, Ubuntu debian patch/config archive and cross-toolchain-base recipe are supplied here. BusyBox source and resolved configuration are in io-vm-sources.tar.xz."
+}

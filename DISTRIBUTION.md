@@ -14,11 +14,11 @@ Apache-2.0 license covers its build scripts, not every file in the disk image.
 | --- | --- | --- |
 | Image build scripts | Apache-2.0 | This repository's LICENSE and release commit |
 | HypeR-authored kernel, applications and SDK | Apache-2.0 | HypeR-LICENSE, HypeR-NOTICE when present, HypeR-source.tar.gz |
-| Rust standard library, runtime and linked crates | Respective upstream licenses | Dependency versions and build recipes in the HypeR source archive; a consolidated dependency notice archive is not currently generated |
+| Rust standard library, runtime and linked crates | Respective upstream licenses | rust-materials.tar.gz: lockfile-selected registry source archives, original license files, assembled patched std source and COPYRIGHT-library.html |
 | I/O VM Linux and bridge modules | Linux license terms and per-file exceptions; bridge modules GPL-2.0-only | io-vm-sources.tar.xz, io-vm-kernel.config, io-vm.lock.json and io-vm-manifest.json |
-| I/O VM BusyBox and services | BusyBox GPL terms; project-authored services Apache-2.0; linked libraries retain their own licenses | Appliance sources and build configuration in io-vm-sources.tar.xz; the image assembler does not separately inventory static libc inputs |
+| I/O VM BusyBox and services | BusyBox GPL terms; project-authored services Apache-2.0; linked libraries retain their own licenses | Appliance sources and build configuration in io-vm-sources.tar.xz; io-libc-materials.tar.gz supplies the identified glibc sources, Ubuntu patches/build recipes and GCC runtime license texts |
 | Pi device trees and overlays | Upstream per-file licenses | pi-boot-sources.tar.gz, pi-boot.lock.json and boot-notices.txt |
-| Alpine kernel and rootfs (SD profile) | Per-package licenses | Input versions and download checksums in HypeR sources; Alpine package source archives are not included in the current materials bundle |
+| Alpine kernel and rootfs (SD profile) | Per-package licenses | alpine-materials.tar.gz: installed-package inventory, exact aports recipes, patches, configs and checksum-verified upstream sources, including the guest kernel |
 | Board EEPROM and its bundled firmware | Vendor terms | Not included or updated by these images |
 
 ## Companion archive
@@ -29,12 +29,16 @@ Each `hyper-rpi5-<profile>-materials.tar.xz` accompanies one image and contains:
   hashes of the recorded inputs.
 - `hyper.lock.json` and the exact HypeR source archive.
 - Official Pi boot-input sources, lock and notices.
-- For I/O profiles, the pinned appliance manifest, source layer and kernel configuration.
+- `rust-materials.tar.gz`: a superset of kernel/app registry dependencies and
+  the assembled patched Rust standard-library sources with upstream notices.
+- For I/O profiles, the pinned appliance manifest, source layer, kernel
+  configuration and `io-libc-materials.tar.gz`.
+- For the SD profile, `alpine-materials.tar.gz` with the guest kernel and
+  installed package sources and build recipes.
 - Component documentation and checksums.
 
-The inventory identifies the shipped artifacts. It is not a license certificate
-or a physical-hardware test report. The table above describes what the build
-actually supplies, including material it does not yet collect.
+The inventory records artifact identities. Hardware test results are documented
+separately from the source and license materials.
 
 ## Source provenance
 
@@ -45,3 +49,18 @@ the upstream license files they contain; they are not relicensed by this reposit
 
 The image build and bundle scripts are available in `scripts/`. Release assets
 are assembled from the same Actions outputs without rebuilding the images.
+
+## Material identity checks
+
+Registry archives are verified against Cargo.lock. Alpine packages select aports
+commits from their installed APK database; external recipe inputs are verified
+against APKBUILD SHA-512 hashes. Build recipes are archived, not executed by the
+collector. The guest kernel source selection is bound to its Image hash and
+module release. Static libc material selection is bound to the exact I/O OCI
+manifest and source revision, with build-log provenance retained.
+
+The records under `materials/` identify corresponding sources; they do not select
+alternative image dependencies. HypeR remains the sole product version pin. When
+its inputs change, the material checks require matching records rather than
+substituting newer source versions. Service source and link commands accompany
+the I/O archive for rebuilding against a modified compatible libc.

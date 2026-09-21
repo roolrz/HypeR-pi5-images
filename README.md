@@ -48,3 +48,14 @@ of the accompanying source and notice archives.
 Native and diskless I/O images run a QEMU GICv2 boot/console smoke test during
 assembly. The full SD profile is built but has no automated physical-board test.
 Release-specific results belong with the corresponding image version.
+
+## Script checks
+
+Use Python 3.11 or newer. Install `requirements-dev.txt`, then run:
+
+```sh
+python3 -m black --check scripts tests
+python3 -m unittest discover -s tests
+```
+
+Run `python3 -m black scripts tests` to apply the shared format.

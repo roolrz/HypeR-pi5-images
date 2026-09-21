@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 roolrz
+# SPDX-License-Identifier: Apache-2.0
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]

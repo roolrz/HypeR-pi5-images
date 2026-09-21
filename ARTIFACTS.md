@@ -24,7 +24,9 @@ capacity is not automatically added to the fixed guest partitions.
 
 - `SHA256SUMS`: checksums of the published image and companion archives.
 - `hyper-rpi5-<profile>-materials.tar.xz`: matching profile inventory, locks,
-  notices, source archives and configuration. Not a bootable image; do not flash.
+  notices, source archives and configuration. Includes Rust sources for every
+  profile, libc materials for I/O profiles, and Alpine sources for SD. Not a
+  bootable image; do not flash.
 - `ARTIFACTS.md`: this image-selection guide.
 - `DISTRIBUTION.md`: component licenses and supplied source/notice materials.
 
