@@ -1,0 +1,92 @@
+name: Pi 5 image
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      profile:
+        type: choice
+        options: [all, io-bringup, native, sd]
+        default: all
+      release:
+        description: Create a draft prerelease with the selected images
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: pi-image-${{ github.ref }}-${{ inputs.profile || 'all' }}
+  cancel-in-progress: false
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: ${{ fromJSON(inputs.profile && inputs.profile != 'all' && format('["{0}"]', inputs.profile) || '["native","io-bringup","sd"]') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout pinned HypeR
+        run: python3 scripts/build.py --checkout-only
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends clang cmake cpio lld llvm make \
+            dosfstools mtools e2fsprogs squashfs-tools device-tree-compiler xz-utils qemu-system-arm
+          toolchain=$(sed -n 's/^channel = "\([^"]*\)"$/\1/p' work/HypeR/rust-toolchain.toml)
+          test -n "$toolchain"
+          rustup toolchain install "$toolchain" --profile minimal \
+            --component rust-src --component llvm-tools --target aarch64-unknown-none
+          rustup default "$toolchain"
+      - name: Build compressed image and source assets
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: python3 scripts/build.py --profile "$PROFILE"
+      - name: Exercise generated Native and I/O boot payloads
+        if: matrix.profile != 'sd'
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: |
+          python3 scripts/smoke.py --profile "$PROFILE" \
+            --kernel work/HypeR/kernel/target/aarch64-unknown-none/kernel/hyper.img \
+            --initramfs work/HypeR/target/board/rpi5-native/bootstrap.cpio \
+            --log smoke.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: boot-log-${{ matrix.profile }}
+          path: smoke.log
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pi5-${{ matrix.profile }}
+          path: dist/${{ matrix.profile }}/
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7
+  release:
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.release)
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: pi5-*
+          path: release-assets
+      - name: Verify and create draft prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROFILE: ${{ inputs.profile || 'all' }}
+          RELEASE_COMMIT: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          python3 scripts/bundle.py --input release-assets --output release-bundle
+          tag="pi5-${PROFILE}-${RUN_ID}-${RUN_ATTEMPT}"
+          gh release create "$tag" release-bundle/* --target "$RELEASE_COMMIT" \
+            --draft --prerelease --title "Pi 5 ${PROFILE} (${RUN_ID})" \
+            --notes-file ARTIFACTS.md
