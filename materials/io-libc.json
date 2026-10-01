@@ -1,12 +1,12 @@
 {
   "SPDX-FileCopyrightText": "2026 roolrz",
   "SPDX-License-Identifier": "Apache-2.0",
-  "io_manifest_sha256": "42f8f7f6abe3f442b323875c52508a9c2e6a978ac61dff13e470351a471c2def",
-  "source_revision": "cb81368bcb1301aa7499c4b4621ec9748536e2e9",
-  "build_run": "https://github.com/roolrz/HypeR-io-vm/actions/runs/35516979133",
+  "io_manifest_sha256": "c6b75cf64f786c2185548773870c63608fcf06552c1e9a18abfd952ccdc16b08",
+  "source_revision": "33a04800b2d0e9f6086fe20c3c3a8ab39f728bdd",
+  "build_run": "https://github.com/roolrz/HypeR-io-vm/actions/runs/36816098407",
   "build_evidence": [
-    "AArch64 rpi5 kernel, appliance, and disk acceptance\tUNKNOWN STEP\t2026-09-20T14:36:13.7917762Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libc6-arm64-cross all 2.39-0ubuntu8cross1 [1197 kB]",
-    "AArch64 rpi5 kernel, appliance, and disk acceptance\tUNKNOWN STEP\t2026-09-20T14:36:34.7572052Z Get:109 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libc6-dev-arm64-cross all 2.39-0ubuntu8cross1 [1629 kB]"
+    "2026-10-01T04:39:17.8098068Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libc6-arm64-cross all 2.39-0ubuntu8cross1 [1197 kB]",
+    "2026-10-01T04:39:22.3241108Z Get:111 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libc6-dev-arm64-cross all 2.39-0ubuntu8cross1 [1629 kB]"
   ],
   "glibc": "2.39-0ubuntu8",
   "cross_toolchain_base": "68ubuntu5",
