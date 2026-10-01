@@ -48,10 +48,14 @@ jobs:
         env:
           PROFILE: ${{ matrix.profile }}
         run: |
+          args=()
+          if [ "$PROFILE" = io-bringup ]; then
+            args+=(--vm-config work/HypeR/target/board/rpi5-native/bringup/vms.json)
+          fi
           python3 scripts/smoke.py --profile "$PROFILE" \
             --kernel work/HypeR/kernel/target/aarch64-unknown-none/kernel/hyper.img \
             --initramfs work/HypeR/target/board/rpi5-native/bootstrap.cpio \
-            --log smoke.log
+            --log smoke.log "${args[@]}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

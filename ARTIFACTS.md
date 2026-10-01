@@ -11,7 +11,7 @@ partition table and data. Verify SHA256SUMS and the destination device first.
 | Filename | Uncompressed layout | Use |
 | --- | --- | --- |
 | **hyper-rpi5-sd.img.xz** | About 3 GiB: 1 GiB FAT boot/configuration partition + 2 GiB Alpine ext4 root disk, plus partition/alignment space | **Full system image. Choose this for the Pi SD backend and Alpine VM.** HypeR shell + resident I/O VM; Linux owns the SD controller, dm-linear exports volumes, HypeR mounts configuration at `/data`. Alpine is installed but not autostarted: `vmm start alpine`, then `vmm console alpine`. |
-| hyper-rpi5-io-bringup.img.xz | About 69.2 MB (66 MiB): 64 MiB FAT boot partition plus partition/alignment space | Minimal Linux guest bring-up. HypeR shell + manual diskless I/O VM (`vmm start io-bringup`). No SD backend, `/data` mount or Alpine disk. |
+| hyper-rpi5-io-bringup.img.xz | About 69.2 MB (66 MiB): 64 MiB FAT boot partition plus partition/alignment space | Minimal Linux guest bring-up. HypeR shell + manual diskless I/O VM (`vmm list` to find its board-configured name; currently `vmm start io`, then `vmm console io`). No SD backend, `/data` mount or Alpine disk. |
 | hyper-rpi5-native.img.xz | About 69.2 MB (66 MiB): 64 MiB FAT boot partition plus partition/alignment space | HypeR kernel/Native shell bring-up only. No Linux I/O VM or Alpine. |
 
 Sizes follow the pinned board configuration. Exact uncompressed size and digest
