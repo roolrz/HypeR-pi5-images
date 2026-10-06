@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import importlib.util
+import json
 import lzma
 import sys
 from pathlib import Path
@@ -17,6 +18,60 @@ spec.loader.exec_module(build)
 
 
 class BuildTests(unittest.TestCase):
+    def test_stale_io_materials_stop_before_build_or_checkout_return(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "hyper.lock.json").write_text("{}")
+            (root / "materials").mkdir()
+            (root / "materials/io-libc.json").write_text(
+                json.dumps({"io_manifest_sha256": "old", "source_revision": "old"})
+            )
+            hyper = root / "work/HypeR"
+            (hyper / "scripts").mkdir(parents=True)
+            (hyper / "scripts/io-vm.lock.json").write_text(
+                json.dumps(
+                    {
+                        "platforms": {
+                            "rpi5": {
+                                "reference": "example@sha256:new",
+                                "source_revision": "new",
+                            }
+                        }
+                    }
+                )
+            )
+            for profile in ("io-bringup", "sd"):
+                for mode in ([], ["--checkout-only"]):
+                    with (
+                        self.subTest(profile=profile, mode=mode),
+                        patch.object(build, "ROOT", root),
+                        patch.object(build, "checkout_hyper", return_value=hyper),
+                        patch.object(build, "build_image") as compile_image,
+                        patch.object(
+                            sys, "argv", ["build.py", "--profile", profile] + mode
+                        ),
+                    ):
+                        with self.assertRaisesRegex(ValueError, "I/O VM changed"):
+                            build.main()
+                        compile_image.assert_not_called()
+                        self.assertFalse((root / "dist").exists())
+
+    def test_native_checkout_needs_no_io_materials(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "hyper.lock.json").write_text("{}")
+            with (
+                patch.object(build, "ROOT", root),
+                patch.object(build, "checkout_hyper", return_value=root / "HypeR"),
+                patch.object(build, "build_image") as compile_image,
+                patch.object(
+                    sys, "argv", ["build.py", "--profile", "native", "--checkout-only"]
+                ),
+            ):
+                build.main()
+                compile_image.assert_not_called()
+                self.assertFalse((root / "dist").exists())
+
     def test_compression_preserves_image(self):
         with tempfile.TemporaryDirectory() as temporary:
             directory = Path(temporary)

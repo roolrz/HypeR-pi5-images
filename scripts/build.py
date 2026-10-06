@@ -195,11 +195,18 @@ def main():
     parser.add_argument(
         "--profile", choices=["native", "io-bringup", "sd"], default="io-bringup"
     )
-    parser.add_argument("--checkout-only", action="store_true")
+    parser.add_argument(
+        "--checkout-only",
+        action="store_true",
+        help="fetch pinned HypeR and validate I/O libc provenance without building",
+    )
     args = parser.parse_args()
 
     lock = json.loads((ROOT / "hyper.lock.json").read_text())
     hyper = checkout_hyper(lock)
+    if args.profile != "native":
+        libc_pin = json.loads((ROOT / "materials/io-libc.json").read_text())
+        materials.validate_libc_pin(hyper, libc_pin)
     if args.checkout_only:
         return
 
@@ -217,7 +224,6 @@ def main():
     materials.collect_rust(hyper, dist / "rust-materials.tar.gz", cache / "crates")
     if args.profile != "native":
         collect_io_materials(hyper, dist)
-        libc_pin = json.loads((ROOT / "materials/io-libc.json").read_text())
         materials.collect_libc(
             hyper, dist / "io-libc-materials.tar.gz", cache / "libc", libc_pin
         )

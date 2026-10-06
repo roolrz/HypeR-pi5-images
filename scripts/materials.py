@@ -275,7 +275,7 @@ def collect_alpine(hyper, output, cache, kernel):
     return len(packages), len(recipes)
 
 
-def collect_libc(hyper, output, cache, pin):
+def validate_libc_pin(hyper, pin):
     selected = json.loads((hyper / "scripts/io-vm.lock.json").read_text())["platforms"][
         "rpi5"
     ]
@@ -286,6 +286,10 @@ def collect_libc(hyper, output, cache, pin):
         raise ValueError(
             "I/O VM changed; collect its actual libc build identity before publishing"
         )
+
+
+def collect_libc(hyper, output, cache, pin):
+    validate_libc_pin(hyper, pin)
     with tarfile.open(output, "w:gz") as archive:
         for item in pin["files"]:
             if Path(item["name"]).name != item["name"]:

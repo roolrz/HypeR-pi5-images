@@ -26,6 +26,13 @@ Alpine versions follow that commit's dependency locks. This repository composes
 images using HypeR's build targets; it does not maintain a separate Linux build.
 You can also build locally from a HypeR checkout without this repository.
 
+When updating the HypeR pin, check whether its Pi 5 I/O VM lock changed. If so,
+update `materials/io-libc.json` from that appliance's actual build log, including
+its manifest digest, source revision and libc package versions. Recipe checks and
+image builds verify this identity before compiling; `--profile native` does not
+require I/O VM materials. Run `python3 scripts/build.py --profile sd --checkout-only`
+to fetch the pinned HypeR sources and check the I/O libc provenance without building.
+
 Each update to `main` builds all three profiles and, after successful completion,
 creates a Draft Release with compressed images, companion materials and checksums.
 Publication is manual. Actions artifacts are available for seven days. Manual
